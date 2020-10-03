@@ -2,12 +2,150 @@
 <html>
 <head>
     <title>Index</title>
-</head>
-<body>
-    <div id='parent_div_1'>
-      <div class='child_div_1'> <img src="{{ image }}" alt="Image"> </div>
-      <div class='child_div_2'></div>
-    </div>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    </head>
+    <body>
+    <div id='image_div'>
+        <canvas id="myCanvas"></canvas>
 
+<!--      <img class="img" src="{{ image }}" alt="Image">-->
+<!--        <canvas id="myCanvas" width="500" height="500" >-->
+<!--        Your browser does not support the HTML5 canvas tag.</canvas>-->
+    </div>
+    <div class="divider2" > </div>
+    <div id='button_div'>
+        <div id='button_div_1'> <button id="button1"> Good</button></div>
+        <div class="divider"> </div>
+        <div id='button_div_2'> <button id="button2"> Bad</button></div>
+
+        <div class="divider"> </div>
+        <div id='button_div_3'> <button id="button3" onclick="change()"> Set</button></div>
+    </div>
+    <div id="log_rectangle">
+        <div class="p-div">
+        <p>x start : </p> <p id="x-start">0</p>
+            </div>
+        <div class="p-div">
+        <p>y start : </p> <p id="y-start">0</p>
+            </div>
+        <div class="p-div">
+        <p>width : </p> <p id="rect-width">0</p>
+            </div>
+        <div class="p-div">
+        <p>height :</p> <p id="rect-height">0</p>
+            </div>
+    </div>
+<!--    <p id="box"> 123</p>-->
+   <script>
+<!--      var canvas = document.getElementById('myCanvas');-->
+<!--      var context = canvas.getContext('2d');-->
+<!--      var imageObj = new Image();-->
+
+<!--      imageObj.onload = function() {-->
+<!--        context.drawImage(imageObj, 69, 50);-->
+<!--      };-->
+<!--      imageObj.src = '{{ image }}';-->
+
+    var canvas = document.getElementById('myCanvas');
+    var ctx = canvas.getContext('2d');
+    var rect = {};
+    var drag = false;
+    var imageObj = null;
+
+    function scalePreserveAspectRatio(imgW,imgH,maxW,maxH){
+    return(Math.min((maxW/imgW),(maxH/imgH)));
+    }
+
+
+    function init() {
+        imageObj = new Image();
+        imageObj.onload = function () { ctx.drawImage(imageObj, 0, 0); };
+        imageObj.src = '{{ image }}';
+        canvas.addEventListener('mousedown', mouseDown, false);
+        canvas.addEventListener('mouseup', mouseUp, false);
+        canvas.addEventListener('mousemove', mouseMove, false);
+        canvas.width = imageObj.width;
+        canvas.height = imageObj.height;
+
+    }
+
+    function mouseDown(e) {
+        rect.startX = e.pageX - this.offsetLeft;
+        rect.startY = e.pageY - this.offsetTop;
+        drag = true;
+    }
+
+    function mouseUp() { drag = false; }
+
+    function mouseMove(e) {
+        if (drag) {
+            ctx.clearRect(0, 0, 500, 500);
+            ctx.drawImage(imageObj, 0, 0);
+            rect.w = (e.pageX - this.offsetLeft) - rect.startX;
+            rect.h = (e.pageY - this.offsetTop) - rect.startY;
+            ctx.strokeStyle = 'red';
+            ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
+        }
+    }
+
+    function change()
+    {
+        var elem1 = document.getElementById('x-start');
+        elem1.innerHTML = rect.startX;
+        var elem2 = document.getElementById('y-start');
+        elem2.innerHTML = rect.startY;
+        var elem3 = document.getElementById('rect-width');
+        elem3.innerHTML = rect.w;
+        var elem4 = document.getElementById('rect-height');
+        elem4.innerHTML = rect.h;
+
+        let xhr = new XMLHttpRequest();
+        let url = "/new-label";
+
+        // open a connection
+<!--        xhr.open("POST", url, true);-->
+
+<!--        // Set the request header i.e. which type of content you are sending-->
+<!--        xhr.setRequestHeader("Content-Type", "application/json");-->
+
+        // Create a state change callback
+<!--        xhr.onreadystatechange = function () {-->
+<!--            if (xhr.readyState === 4 && xhr.status === 200) {-->
+
+<!--                // Print received data from server-->
+<!--                result.innerHTML = this.responseText;-->
+
+<!--            }-->
+<!--        };-->
+
+        // Converting JSON data to string
+<!--        var data = JSON.stringify({ "name": "a", "email": "b });-->
+
+<!--        // Sending data with the request-->
+<!--        xhr.send(data);-->
+    }
+
+    init();
+
+    </script>
+<!--    <script>-->
+<!--        window.onload = function() {-->
+<!--          var c=document.getElementById("myCanvas");-->
+<!--          var ctx=c.getContext("2d");-->
+<!--          var img=document.getElementById("img");-->
+<!--          ctx.drawImage(img,10,10);-->
+<!--          var canvas = document.getElementById('myCanvas');-->
+<!--          var context = canvas.getContext('2d');-->
+
+<!--          context.beginPath();-->
+<!--          context.rect(188, 50, 200, 100);-->
+<!--          context.fillStyle = 'yellow';-->
+<!--          context.fill();-->
+<!--          context.lineWidth = 7;-->
+<!--          context.strokeStyle = 'black';-->
+<!--          context.stroke();-->
+<!--        }-->
+<!--    </script>-->
 </body>
 </html>
